@@ -1,0 +1,103 @@
+#tictactoe
+
+def displayBoard(board):
+    #board : outer list
+    for row in board: #e1,e2,e3
+        print()
+        #e1,e2,e3 : inner lists
+        for col in row: #eN :val,val,val
+            print(col, end=' ')
+    print()
+
+def updateBoard(board, r, c, sym):
+    if r < 0 or r >= len(board):
+        return  False
+    elif c < 0 or c >= len(board[r]):
+        return False
+    elif board[r][c] != '[ ]': #[ ] == EMPTY
+        return False
+
+    #update board
+    board[r][c] = '['+ sym +']'
+    return True
+
+def isFull(board):
+    for row in board:
+        for col in row:
+            if col == '[ ]': #'[ ]' == EMPTY
+                return False
+    return True
+
+def checkWins(board, sym):
+    sym = '['+ sym + ']' # X : [X]
+
+    #row check
+    i = 0
+    while i < 3:
+        if board[i][0] == sym and board[i][1] == sym and board[i][2] == sym:
+            return True
+        i+=1
+
+    # col check
+    i = 0
+    while i < 3:
+        if board[0][i] == sym and board[1][i] == sym and board[2][i] == sym:
+            return True
+        i += 1
+
+    #diagonal check
+    if board[0][0] == sym and board[1][1] == sym and board[2][2] == sym:
+        return True
+
+    #reverse diagonal check
+    if board[0][2] == sym and board[1][1] == sym and board[2][0] == sym:
+        return True
+
+    return False
+
+def tictactoe():
+    #a tictactoe board is a 3*3 matrix
+    #it can be implemented as a nested list
+    #board = [e1, e2, e3]
+    #e1 = [val, val, val] or [val]*3
+    #e2 = [val, val, val] or [val]*3
+    #e3 = [val, val, val] or [val]*3
+
+    board = [ ['[ ]']*3, ['[ ]']*3, ['[ ]']*3 ]
+    players = []
+    symbols = ['X','O']
+    players.append(input('Enter name for player1 : '))
+    players.append(input('Enter name for player2 : '))
+
+    i =0
+    while i < 2:
+        print('Symbol for '+ players[i] + ' : ' + symbols[i])
+        i+=1
+
+    i = 0
+    flag = 1
+
+    while not isFull(board):
+        displayBoard(board)
+        print(players[i] + ' (' +symbols[i] +') plays : ')
+        r = int(input('Enter row(0-2) : '))
+        c = int(input('Enter col(0-2) : '))
+
+        if updateBoard(board, r, c, symbols[i]):
+            if checkWins(board, symbols[i]):
+                displayBoard(board)
+                print(players[i] + ' ('+ symbols[i] + ') Wins!!!')
+                flag = 0
+                break
+            i = (i+1)%2 #switch player
+        else:
+            print('Invalid Move')
+
+    if flag == 1:
+        displayBoard(board)
+        print('Game Draw !!!')
+
+def main():
+    tictactoe()
+
+main()
